@@ -7,13 +7,13 @@ GRAY = (128, 128, 128)
 
 colors = {
     0: (0, 0, 0),
-    1: (0, 0, 255),
-    2: (255, 0, 0),
-    3: (0, 255, 0),
-    4: (160, 32, 240),
-    5: (255, 165, 0),
-    6: (255, 255, 0),
-    7: (0, 100, 100)
+    1: (174,41,138),
+    2: (226,159,2),
+    3: (89,176,1),
+    4: (215,15,54),
+    5: (15,155,214),
+    6: (33,65,197),
+    7: (226,91,2)
 }
 
 
@@ -31,8 +31,11 @@ class Board:
         self.cell_size = (self.window_width - padding) // self.board_width
         self.score = 0
         self.game_over = False
+        self.next_piece = None
+        self.hold_piece = None
+        self.hold_piece_used = False
 
-    def game_over_screen(self, screen):
+    def __draw_game_over_screen(self, screen):
         # Set up font
         font = pygame.font.SysFont('Calibri', 50, True, False)
 
@@ -84,15 +87,14 @@ class Board:
         elif row_deleted_count == 4:
             self.score += 1200
 
-    def draw(self, screen):
-        # Draw the game board
+    def __draw_game_board(self, screen):
         for y in range(0, self.board_height):
             for x in range(0, self.board_width):
                 pygame.draw.rect(screen, colors[self.grid[y][x]], (
                     x * self.cell_size, y * self.cell_size, self.cell_size,
                     self.cell_size))
 
-        # Draw the gridlines
+    def __draw_grid_lines(self, screen):
         for x in range(self.window_height - self.window_board_height,
                        self.window_board_width,
                        self.cell_size):
@@ -112,12 +114,61 @@ class Board:
                          (self.window_board_width,
                           self.cell_size * self.board_height))
 
-        # Draw the score number
-        font = pygame.font.SysFont('Calibri', 25, True, False)
+    def __draw_score(self, screen, font):
         text = font.render(f"Score: {self.score}", True, WHITE)
-        screen.fill(BLACK, (50, self.window_board_height, text.get_width(), text.get_height()))
-        screen.blit(text, [50, self.window_board_height])
+        screen.fill(BLACK, (50, self.window_board_height+80, text.get_width(), text.get_height()))
+        screen.blit(text, [50, self.window_board_height+80])
+
+    def __draw_next_piece(self, screen, font):
+        text = font.render(f"Next Piece", True, WHITE)
+        screen.fill(BLACK, (self.window_board_width + 20, 50, text.get_width(), text.get_height()))
+        screen.blit(text, [self.window_board_width + 20, 50])
+
+        if self.next_piece:
+            screen.fill(BLACK, (self.window_board_width + 20, 100, 150, 150))
+            for y in range(0, len(self.next_piece.shape)):
+                for x in range(0, len(self.next_piece.shape[y])):
+                    pygame.draw.rect(screen, colors[self.next_piece.shape[y][x]], (
+                        (x * self.cell_size) + self.window_board_width + 20, (y * self.cell_size) + 100, self.cell_size,
+                        self.cell_size))
+
+
+    def __draw_hold_piece(self, screen, font):
+        text = font.render(f"Hold Piece", True, WHITE)
+        screen.fill(BLACK, (
+        self.window_board_width + 20, 200, text.get_width(), text.get_height()))
+        screen.blit(text, [self.window_board_width + 20, 200])
+
+        if self.hold_piece:
+            screen.fill(BLACK, (self.window_board_width + 20, 250, 150, 150))
+            for y in range(0, len(self.hold_piece.shape)):
+                for x in range(0, len(self.hold_piece.shape[y])):
+                    pygame.draw.rect(screen,
+                                     colors[self.hold_piece.shape[y][x]], (
+                                         (x * self.cell_size) + self.window_board_width + 20,
+                                         (y * self.cell_size) + 250,
+                                         self.cell_size,
+                                         self.cell_size))
+
+    def draw(self, screen):
+        # Set up font
+        font = pygame.font.SysFont('Calibri', 25, True, False)
+
+        # Draw the game board
+        self.__draw_game_board(screen)
+
+        # Draw the gridlines
+        self.__draw_grid_lines(screen)
+
+        # Draw the score number
+        self.__draw_score(screen, font)
+
+        # Draw the next piece
+        self.__draw_next_piece(screen, font)
+
+        # Draw the hold piece
+        self.__draw_hold_piece(screen, font)
 
         if self.game_over:
-            self.game_over_screen(screen)
+            self.__draw_game_over_screen(screen)
 
