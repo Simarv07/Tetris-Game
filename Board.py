@@ -35,34 +35,6 @@ class Board:
         self.hold_piece = None
         self.hold_piece_used = False
 
-    def __draw_game_over_screen(self, screen):
-        # Set up font
-        font = pygame.font.SysFont('Calibri', 50, True, False)
-
-        # Set up title text
-        title_text = font.render("GAME OVER", True, WHITE)
-        score_text = font.render("Score: " + str(self.score), True, WHITE)
-        rectangle_width = 300
-        rectangle_height = 150
-        rectangle_left = (self.window_board_width - rectangle_width) // 2
-        rectangle_top = (self.window_board_height - rectangle_height) // 2
-        rectangle = pygame.Rect(rectangle_left, rectangle_top, rectangle_width,
-                                rectangle_height)
-
-        # Draw the rectangle
-        pygame.draw.rect(screen, BLACK, rectangle)
-
-        # Draw the title text
-        title_text_rect = title_text.get_rect()
-        title_text_rect.center = rectangle.center
-        title_text_rect.y -= 30
-        screen.blit(title_text, title_text_rect)
-
-        # Draw the score text
-        score_text_rect = score_text.get_rect()
-        score_text_rect.center = (rectangle.centerx, rectangle.centery + 30)
-        screen.blit(score_text, score_text_rect)
-
     def remove_row(self, row):
         # Shift the remaining arrays to the right
         for i in range(row - 1, -1, -1):
@@ -86,6 +58,28 @@ class Board:
             self.score += 300
         elif row_deleted_count == 4:
             self.score += 1200
+
+    def draw(self, screen):
+        # Set up font
+        font = pygame.font.SysFont('Calibri', 25, True, False)
+
+        # Draw the game board
+        self.__draw_game_board(screen)
+
+        # Draw the gridlines
+        self.__draw_grid_lines(screen)
+
+        # Draw the score number
+        self.__draw_score(screen, font)
+
+        # Draw the next piece
+        self.__draw_next_piece(screen, font)
+
+        # Draw the hold piece
+        self.__draw_hold_piece(screen, font)
+
+        if self.game_over:
+            self.__draw_game_over_screen(screen)
 
     def __draw_game_board(self, screen):
         for y in range(0, self.board_height):
@@ -150,25 +144,31 @@ class Board:
                                          self.cell_size,
                                          self.cell_size))
 
-    def draw(self, screen):
+    def __draw_game_over_screen(self, screen):
         # Set up font
-        font = pygame.font.SysFont('Calibri', 25, True, False)
+        font = pygame.font.SysFont('Calibri', 50, True, False)
 
-        # Draw the game board
-        self.__draw_game_board(screen)
+        # Set up title text
+        title_text = font.render("GAME OVER", True, WHITE)
+        score_text = font.render("Score: " + str(self.score), True, WHITE)
+        rectangle_width = 300
+        rectangle_height = 150
+        rectangle_left = (self.window_board_width - rectangle_width) // 2
+        rectangle_top = (self.window_board_height - rectangle_height) // 2
+        rectangle = pygame.Rect(rectangle_left, rectangle_top, rectangle_width,
+                                rectangle_height)
 
-        # Draw the gridlines
-        self.__draw_grid_lines(screen)
+        # Draw the rectangle
+        pygame.draw.rect(screen, BLACK, rectangle)
 
-        # Draw the score number
-        self.__draw_score(screen, font)
+        # Draw the title text
+        title_text_rect = title_text.get_rect()
+        title_text_rect.center = rectangle.center
+        title_text_rect.y -= 30
+        screen.blit(title_text, title_text_rect)
 
-        # Draw the next piece
-        self.__draw_next_piece(screen, font)
-
-        # Draw the hold piece
-        self.__draw_hold_piece(screen, font)
-
-        if self.game_over:
-            self.__draw_game_over_screen(screen)
+        # Draw the score text
+        score_text_rect = score_text.get_rect()
+        score_text_rect.center = (rectangle.centerx, rectangle.centery + 30)
+        screen.blit(score_text, score_text_rect)
 

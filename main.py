@@ -16,7 +16,7 @@ pygame.init()
 # Set up the game window
 WINDOW_WIDTH = 500
 WINDOW_HEIGHT = 800
-PADDING = 150
+PADDING = 160
 HOLD_SLEEP_TIME = 0.1
 
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
