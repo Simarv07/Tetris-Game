@@ -1,6 +1,11 @@
 # Tetris-Game
 This is a simple implementation of the classic Tetris game using Pygame. 
 
+# Installation
+- Clone this repository: git clone https://github.com/Simarv07/tetris.git
+- Install the required packages: pip install pygame
+- Run the game: python main.py
+
 # How to Play
 - Use the arrow keys to move the Tetrominoes left and right.
 - Use the up arrow key to rotate the Tetrominoes.
