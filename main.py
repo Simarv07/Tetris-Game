@@ -18,6 +18,8 @@ WINDOW_WIDTH = 500
 WINDOW_HEIGHT = 800
 PADDING = 160
 HOLD_SLEEP_TIME = 0.1
+INTREVAL_TIME = 1000
+
 
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption("Tetris")
@@ -43,7 +45,7 @@ pygame.mixer.music.load('Tetris.mp3')
 pygame.mixer.music.play(-1)
 
 # Create an instance of the Board class
-board = Board(WINDOW_WIDTH, WINDOW_HEIGHT, PADDING)
+board = Board(WINDOW_WIDTH, WINDOW_HEIGHT, PADDING) 
 
 # Create a list to hold the current piece and the next piece
 pieces = [Piece(random.choice(shapes), board),
@@ -53,7 +55,7 @@ pieces[0].update_shape(board.grid)
 # Main game loop
 game_over = False
 timer_event = pygame.USEREVENT + 1
-pygame.time.set_timer(timer_event, 1000)
+pygame.time.set_timer(timer_event, INTREVAL_TIME)
 
 
 def replace_current_piece():
@@ -100,7 +102,7 @@ def handle_key_presses():
             replace_current_piece()
 
         # Resets the timer event
-        pygame.time.set_timer(timer_event, 1000)
+        pygame.time.set_timer(timer_event, INTREVAL_TIME)
         time.sleep(HOLD_SLEEP_TIME)
     if keys[pygame.K_LEFT]:
         # Moves the current piece left
@@ -116,27 +118,30 @@ def handle_key_presses():
 while not game_over:
     current_piece = pieces[0]
     board.next_piece = pieces[1]
+    if not board.game_over:
+        handle_key_presses()
 
-    handle_key_presses()
+        for event in pygame.event.get():
+            # Handles the timer where a block will be moved down every second
+            if event.type == timer_event:
+                if not current_piece.move(0, 1):
+                    replace_current_piece()
+                if INTREVAL_TIME > 100:
+                    INTREVAL_TIME -= 5
+            elif event.type == pygame.KEYDOWN:
+                # Rotate the current piece
+                if event.key == pygame.K_UP:
+                    current_piece.rotate_shape()
+                if event.key == pygame.K_c:
+                    hold_piece()
+                if event.key == pygame.K_SPACE:
+                    while current_piece.move(0, 1):
+                        pass
+                    replace_current_piece()
 
     for event in pygame.event.get():
-
         if event.type == pygame.QUIT:
             game_over = True
-        # Handles the timer where a block will be moved down every second
-        if event.type == timer_event:
-            if not current_piece.move(0, 1):
-                replace_current_piece()
-        elif event.type == pygame.KEYDOWN:
-            # Rotate the current piece
-            if event.key == pygame.K_UP:
-                current_piece.rotate_shape()
-            if event.key == pygame.K_c:
-                hold_piece()
-            if event.key == pygame.K_SPACE:
-                while current_piece.move(0, 1):
-                    pass
-                replace_current_piece()
 
     board.draw(screen)
 
