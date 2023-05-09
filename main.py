@@ -118,10 +118,13 @@ def handle_key_presses():
 while not game_over:
     current_piece = pieces[0]
     board.next_piece = pieces[1]
+
     if not board.game_over:
         handle_key_presses()
 
         for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                game_over = True
             # Handles the timer where a block will be moved down every second
             if event.type == timer_event:
                 if not current_piece.move(0, 1):
@@ -138,10 +141,10 @@ while not game_over:
                     while current_piece.move(0, 1):
                         pass
                     replace_current_piece()
-
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            game_over = True
+    else:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                game_over = True
 
     board.draw(screen)
 
