@@ -1,5 +1,5 @@
 import time
-
+import database
 import pygame
 import random
 
@@ -9,17 +9,12 @@ from Piece import Piece
 # Initialize Pygame
 pygame.init()
 
-# TODO: Clean up code in main.py
-# TODO: Have a temp storage you can swap with
-# TODO: Show the highlight at the bottom (optional)
-
 # Set up the game window
 WINDOW_WIDTH = 500
 WINDOW_HEIGHT = 800
 PADDING = 160
 HOLD_SLEEP_TIME = 0.1
 INTREVAL_TIME = 1000
-
 
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption("Tetris")
@@ -45,7 +40,7 @@ pygame.mixer.music.load('Tetris.mp3')
 pygame.mixer.music.play(-1)
 
 # Create an instance of the Board class
-board = Board(WINDOW_WIDTH, WINDOW_HEIGHT, PADDING) 
+board = Board(WINDOW_WIDTH, WINDOW_HEIGHT, PADDING)
 
 # Create a list to hold the current piece and the next piece
 pieces = [Piece(random.choice(shapes), board),
@@ -114,6 +109,15 @@ def handle_key_presses():
         time.sleep(HOLD_SLEEP_TIME)
 
 
+def insert_score(score):
+    leaderboard = database.return_top_ten_scores()
+    if score > leaderboard[-1]:
+        database.insert_new_score(board.score)
+        return True
+    else:
+        return False
+
+
 # Main Game loop
 while not game_over:
     current_piece = pieces[0]
@@ -144,6 +148,7 @@ while not game_over:
     else:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                insert_score(board.score)
                 game_over = True
 
     board.draw(screen)
