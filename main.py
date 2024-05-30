@@ -1,5 +1,5 @@
 import time
-import database
+# import database
 import pygame
 import random
 
@@ -109,13 +109,13 @@ def handle_key_presses():
         time.sleep(HOLD_SLEEP_TIME)
 
 
-def insert_score(score):
-    leaderboard = database.return_top_ten_scores()
-    if score > leaderboard[-1]:
-        database.insert_new_score(board.score)
-        return True
-    else:
-        return False
+# def insert_score(score):
+#     leaderboard = database.return_top_ten_scores()
+#     if score > leaderboard[-1]:
+#         database.insert_new_score(board.score)
+#         return True
+#     else:
+#         return False
 
 
 # Main Game loop

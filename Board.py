@@ -1,6 +1,6 @@
 # Define some colors
 import pygame
-import database
+# import database
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -35,7 +35,7 @@ class Board:
         self.next_piece = None
         self.hold_piece = None
         self.hold_piece_used = False
-        self.top_ten_scores = database.return_top_ten_scores()
+        # self.top_ten_scores = database.return_top_ten_scores()
 
     def remove_row(self, row):
         # Shift the remaining arrays to the right
@@ -176,16 +176,16 @@ class Board:
         screen.blit(score_text, score_text_rect)
 
         # Draw the leaderboard
-        leaderboard_font = pygame.font.SysFont('Calibri', 30, True, False)
-        leaderboard_text = leaderboard_font.render("Previous Top Scores", True, WHITE)
-        leaderboard_text_rect = leaderboard_text.get_rect(
-            center=(self.window_board_width // 2, title_text_rect.bottom + 30))
-        leaderboard_text_rect.y += 50
-        screen.blit(leaderboard_text, leaderboard_text_rect)
+        # leaderboard_font = pygame.font.SysFont('Calibri', 30, True, False)
+        # leaderboard_text = leaderboard_font.render("Previous Top Scores", True, WHITE)
+        # leaderboard_text_rect = leaderboard_text.get_rect(
+        #     center=(self.window_board_width // 2, title_text_rect.bottom + 30))
+        # leaderboard_text_rect.y += 50
+        # screen.blit(leaderboard_text, leaderboard_text_rect)
 
-        for i, score in enumerate(self.top_ten_scores):
-            leaderboard_entry = f"{i  + 1:2}. {score:5}"
-            entry_text = leaderboard_font.render(leaderboard_entry, True, WHITE)
-            entry_rect = entry_text.get_rect(
-                center=(self.window_board_width // 2, leaderboard_text_rect.bottom + (i + 1) * 30))
-            screen.blit(entry_text, entry_rect)
+        # for i, score in enumerate(self.top_ten_scores):
+        #     leaderboard_entry = f"{i  + 1:2}. {score:5}"
+        #     entry_text = leaderboard_font.render(leaderboard_entry, True, WHITE)
+        #     entry_rect = entry_text.get_rect(
+        #         center=(self.window_board_width // 2, leaderboard_text_rect.bottom + (i + 1) * 30))
+        #     screen.blit(entry_text, entry_rect)
